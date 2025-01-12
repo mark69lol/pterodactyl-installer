@@ -10,6 +10,9 @@ SERVER_PORT=${SERVER_PORT:-8080}
 echo "Updating system..."
 apt update -y && apt upgrade -y
 
+echo "Installing service"
+apt-get install sysvinit-utils -y
+
 echo "Installing dependencies..."
 apt install -y apache2 sqlite3 php php-cli php-sqlite3 php-gd php-xml php-mbstring php-curl git curl unzip sudo python3 python3-pip
 
