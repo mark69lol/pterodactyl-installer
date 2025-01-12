@@ -23,7 +23,10 @@ git clone https://github.com/pterodactyl/panel.git pterodactyl
 cd pterodactyl
 
 echo "Installing Pterodactyl dependencies..."
+apt install composer -y
+composer update
 composer install --no-dev --optimize-autoloader
+composer update
 
 # Check if composer install was successful
 if [ ! -d "/var/www/pterodactyl/vendor" ]; then
