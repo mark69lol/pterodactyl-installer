@@ -30,6 +30,9 @@ cd /var/www
 git clone https://github.com/pterodactyl/panel.git pterodactyl
 cd pterodactyl
 
+echo "Installing MariaDB..."
+apt install mariadb-client -y
+
 echo "Configuring MySQL Database..."
 cp .env.example .env
 sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" .env 
