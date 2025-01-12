@@ -25,6 +25,12 @@ cd pterodactyl
 echo "Installing Pterodactyl dependencies..."
 composer install --no-dev --optimize-autoloader
 
+# Check if composer install was successful
+if [ ! -d "/var/www/pterodactyl/vendor" ]; then
+    echo "Composer dependencies were not installed correctly. Please check the errors above and try again."
+    exit 1
+fi
+
 echo "Configuring SQLite Database..."
 cp .env.example .env
 sed -i "s/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/" .env
@@ -48,9 +54,8 @@ sqlite3 /var/www/pterodactyl/database/panel.sqlite <<EOF
   PRAGMA foreign_keys=off;
   CREATE TABLE tasks_new (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    last_run TIMESTAMP NULL,
+    last_run TIMESTAMP NULL
     -- other columns that the table might have, replicate them from the old table
-    -- For example, add all columns from the old tasks table here
   );
   INSERT INTO tasks_new (id, last_run)
     SELECT id, last_run FROM tasks;
@@ -83,6 +88,9 @@ EOF
 echo "Enabling Apache site and mod_rewrite..."
 a2ensite pterodactyl.conf
 a2enmod rewrite
+
+echo "Setting ServerName in Apache configuration..."
+echo "ServerName $SERVER_IP" >> /etc/apache2/apache2.conf
 
 echo "Restarting Apache..."
 service apache2 restart
