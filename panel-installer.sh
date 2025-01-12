@@ -23,17 +23,12 @@ echo "Installing dependencies..."
 apt install -y apache2 php php-cli php-mysql php-gd php-xml php-mbstring php-curl git curl unzip sudo python3 python3-pip
 
 echo "Installing Composer..."
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
+curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
 echo "Downloading Pterodactyl Panel..."
 cd /var/www
 git clone https://github.com/pterodactyl/panel.git pterodactyl
 cd pterodactyl
-
-echo "Installing Pterodactyl dependencies..."
-composer update | php
-composer install --no-dev --optimize-autoloader
 
 echo "Configuring MySQL Database..."
 cp .env.example .env
