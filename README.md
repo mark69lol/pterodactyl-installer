@@ -1,4 +1,8 @@
 # PTERODACTYL INSTALLER WITHOUT SYSTEMCTL & SYSTEMD
 
-## INSTALL COMMAND:
-### sudo curl https://raw.githubusercontent.com/mark69lol/pterodactyl-installer/master/install.sh | bash
+## INSTALLATION:
+```
+sudo wget https://raw.githubusercontent.com/mark69lol/pterodactyl-installer/master/install.sh
+sudo chmod +x install.sh
+sudo bash install.sh
+```
