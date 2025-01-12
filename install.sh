@@ -27,15 +27,8 @@ cd pterodactyl
 
 echo "Installing Pterodactyl dependencies..."
 apt install composer -y
-composer update
+composer update | php
 composer install --no-dev --optimize-autoloader
-composer update
-
-# Check if composer install was successful
-if [ ! -d "/var/www/pterodactyl/vendor" ]; then
-    echo "Composer dependencies were not installed correctly. Please check the errors above and try again."
-    exit 1
-fi
 
 echo "Configuring SQLite Database..."
 cp .env.example .env
@@ -75,6 +68,8 @@ php artisan migrate --force
 
 echo "Configuring Apache to serve Pterodactyl Panel on port $SERVER_PORT..."
 sed -i "s/80/$SERVER_PORT/" /etc/apache2/ports.conf
+echo "Setting ServerName in Apache configuration..."
+echo "ServerName $SERVER_IP" >> /etc/apache2/apache2.conf
 
 cat > /etc/apache2/sites-available/pterodactyl.conf << EOF
 <VirtualHost *:$SERVER_PORT>
@@ -94,9 +89,6 @@ EOF
 echo "Enabling Apache site and mod_rewrite..."
 a2ensite pterodactyl.conf
 a2enmod rewrite
-
-echo "Setting ServerName in Apache configuration..."
-echo "ServerName $SERVER_IP" >> /etc/apache2/apache2.conf
 
 echo "Restarting Apache..."
 service apache2 restart
